@@ -12,4 +12,9 @@ public class Contest {
     public String link;
 
     public String article;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

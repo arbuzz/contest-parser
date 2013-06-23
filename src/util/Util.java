@@ -1,7 +1,9 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 
 /**
  * This code is brought to you by
@@ -12,8 +14,8 @@ public class Util {
 
     private static final String QUERY_FILE_NAME = "query.conf";
 
-    public static String[] getQuery() throws Exception{
-        BufferedReader reader = new BufferedReader(new FileReader(QUERY_FILE_NAME));
+    public static String[] getQuery() throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(QUERY_FILE_NAME), "UTF-8"));
         try {
             StringBuilder sb = new StringBuilder();
             String line = reader.readLine();

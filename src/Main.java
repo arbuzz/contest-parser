@@ -27,12 +27,13 @@ public class Main {
 
             ContestListForm form = new ContestListForm();
             LoadingForm loading = new LoadingForm();
+            loading.log();
 
             JFrame loadingFrame = new JFrame("Загрузка");
             loadingFrame.setContentPane(loading.getPanel1());
             loadingFrame.pack();
             loadingFrame.setVisible(true);
-            loadingFrame.setSize(200, 50);
+            loadingFrame.setSize(400, 100);
 
             form.loadContests();
 

@@ -27,7 +27,6 @@ public class Main {
 
             ContestListForm form = new ContestListForm();
             LoadingForm loading = new LoadingForm();
-            loading.log();
 
             JFrame loadingFrame = new JFrame("Загрузка");
             loadingFrame.setContentPane(loading.getPanel1());

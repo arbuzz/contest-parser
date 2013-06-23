@@ -3,10 +3,12 @@ package form;
 import model.Contest;
 import util.HttpClientHolder;
 import util.PageLoader;
+import util.Util;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,6 +27,19 @@ public class ContestListForm {
 
     public void loadContests() {
         List<Contest> contests = PageLoader.getRFBRContests();
+
+        String[] query = null;
+        try {
+            query = Util.getQuery();
+        } catch (Exception e) {
+            return;
+        }
+        for (Contest contest : contests) {
+            contest = PageLoader.getContestInfo(contest);
+            contest.calculateRate(query);
+        }
+
+        Collections.sort(contests, new Contest.RateComparator());
 
         model = new DefaultListModel();
         for (Contest contest : contests) {

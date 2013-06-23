@@ -19,16 +19,8 @@ public class ContestInfoForm {
     public ContestInfoForm(Contest contest) {
         this.contest = contest;
 
-        textArea1.append("Загрузка...");
-        textArea1.setEditable(false);
-
-        load();
-    }
-
-    private void load() {
-        contest = PageLoader.getContestInfo(contest);
-
         textArea1.setText(contest.article);
+        textArea1.setEditable(false);
     }
 
     public JPanel getPanel1() {

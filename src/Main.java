@@ -1,4 +1,5 @@
 import form.ContestListForm;
+import form.LoadingForm;
 import model.Contest;
 import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
@@ -25,14 +26,26 @@ public class Main {
             BasicConfigurator.configure();
 
             ContestListForm form = new ContestListForm();
+            LoadingForm loading = new LoadingForm();
+
+            JFrame loadingFrame = new JFrame("Загрузка");
+            loadingFrame.setContentPane(loading.getPanel1());
+            loadingFrame.pack();
+            loadingFrame.setVisible(true);
+            loadingFrame.setSize(200, 50);
+
+            form.loadContests();
+
+            loadingFrame.setVisible(false);
 
             listFrame = new JFrame("Конкурсы");
             listFrame.setContentPane(form.getPanel1());
             listFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             listFrame.pack();
             listFrame.setVisible(true);
+            listFrame.setSize(1000, 600);
 
-            form.loadContests();
+
 
 //            logger.info("Starting getting list of RFBR contests");
 //            List<Contest> contests = PageLoader.getRFBRContests();

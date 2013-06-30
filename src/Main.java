@@ -44,22 +44,6 @@ public class Main {
             listFrame.pack();
             listFrame.setVisible(true);
             listFrame.setSize(1000, 600);
-
-
-
-//            logger.info("Starting getting list of RFBR contests");
-//            List<Contest> contests = PageLoader.getRFBRContests();
-//            logger.info("Success! Got " + contests.size() + " RFBR contests");
-//
-//            logger.info("Started getting detailed information");
-//            int i = 0;
-//            for (Contest contest : contests) {
-//                logger.info(++i + "...");
-//                contest = PageLoader.getContestInfo(contest);
-//            }
-//
-//            logger.info("Successfully finished!");
-
         } catch (Exception e) {
             logger.error("Error while executing Main", e);
         }

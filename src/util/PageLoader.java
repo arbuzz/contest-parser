@@ -29,7 +29,7 @@ public class PageLoader {
     private static final String LIST_ELEMENT_CLASS = "l-3 lfc d-block";
     private static final String ARTICLE_CLASS = "article";
 
-
+    private static double complianceLowerBorder = 0;
 
     public static List<Contest> getRFBRContests() {
         try {
@@ -97,5 +97,13 @@ public class PageLoader {
             }
         }
         return wholeText.toString();
+    }
+
+    public static void setComplianceLowerBorder(double border) {
+        complianceLowerBorder = border;
+    }
+
+    public static double getComplianceLowerBorder() {
+        return complianceLowerBorder;
     }
 }

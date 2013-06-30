@@ -2,6 +2,9 @@ package model;
 
 import util.Util;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +26,11 @@ public class Contest {
 
     public int rate = 0;
 
+    public int count = 0;
+
     @Override
     public String toString() {
-        return name + "(" + rate + ")";
+        return name + "(" + getCompliance() + ")";
     }
 
     public void calculateRate(String[] query) {
@@ -41,12 +46,18 @@ public class Contest {
         for (String word : wordCount.keySet()) {
             for (String queryWord : query) {
                 if (Util.dist(word, queryWord) <= MAX_DIST) {
-//                if (word.equals(queryWord)) {
                     rate += wordCount.get(word);
                     continue;
                 }
             }
+            if (word.length() > 3) {
+                count++;
+            }
         }
+    }
+
+    public double getCompliance() {
+        return new BigDecimal(rate).divide(new BigDecimal(count), 2, RoundingMode.UP).doubleValue();
     }
 
     public static class RateComparator implements Comparator<Contest> {

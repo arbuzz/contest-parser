@@ -6,6 +6,8 @@ import util.PageLoader;
 import util.Util;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
@@ -19,14 +21,26 @@ import java.util.List;
 public class ContestListForm {
     private JList list1;
     private JPanel panel1;
+    private JButton settingsButton;
 
     private DefaultListModel model;
+    private List<Contest> contests;
 
     public ContestListForm() {
+        settingsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                JFrame settings = new JFrame("Настройки");
+                SettingsForm form = new SettingsForm(settings, ContestListForm.this);
+                settings.setContentPane(form.getPanel1());
+                settings.pack();
+                settings.setVisible(true);
+                settings.setSize(400, 100);
+            }
+        });
     }
 
     public void loadContests() {
-        List<Contest> contests = PageLoader.getRFBRContests();
+        contests = PageLoader.getRFBRContests();
 
         String[] query = null;
         try {
@@ -40,14 +54,19 @@ public class ContestListForm {
         }
 
         Collections.sort(contests, new Contest.RateComparator());
+        refreshModel();
 
+        list1.addMouseListener(new ContestListMouseAdapter());
+    }
+
+    public void refreshModel() {
         model = new DefaultListModel();
         for (Contest contest : contests) {
-            model.addElement(contest);
+            if (contest.getCompliance() > PageLoader.getComplianceLowerBorder())
+                model.addElement(contest);
         }
 
         list1.setModel(model);
-        list1.addMouseListener(new ContestListMouseAdapter());
     }
 
     public JPanel getPanel1() {

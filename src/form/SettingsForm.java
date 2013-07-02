@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 /**
  * This code is brought to you by
  *
- * @author Olshanikov Konstantin
+ * @author Krivinchenko Oxana
  */
 public class SettingsForm {
     private JTextField complianceTextField;

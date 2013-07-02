@@ -8,11 +8,12 @@ import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * This code is brought to you by
  *
- * @author Olshanikov Konstantin
+ * @author Krivinchenko Oxana
  */
 public class Contest {
 
@@ -63,7 +64,7 @@ public class Contest {
     public static class RateComparator implements Comparator<Contest> {
 
         public int compare(Contest contest, Contest contest1) {
-            return contest.rate > contest1.rate ? -1 : 1;
+            return contest.getCompliance() > contest1.getCompliance() ? -1 : 1;
         }
     }
 }

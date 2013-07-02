@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 /**
  * This code is brought to you by
  *
- * @author Olshanikov Konstantin
+ * @author Krivinchenko Oxana
  */
 public class Util {
 

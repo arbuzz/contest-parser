@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * This code is brought to you by
  *
- * @author Olshanikov Konstantin
+ * @author Krivinchenko Oxana
  */
 public class PageLoader {
 

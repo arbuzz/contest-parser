@@ -1,6 +1,8 @@
 package util;
 
+import com.google.gson.Gson;
 import model.Contest;
+import model.InitPacket;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,6 +12,8 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,9 +33,21 @@ public class PageLoader {
     private static final String LIST_ELEMENT_CLASS = "l-3 lfc d-block";
     private static final String ARTICLE_CLASS = "article";
 
+    public static final String CONTESTS_FOLDER = "contests/";
+
     private static double complianceLowerBorder = 0;
 
     public static List<Contest> getRFBRContests() {
+        InitPacket packet = InitPacket.getInstance();
+        if (packet.contests == null || packet.contests.size() == 0) {
+            packet.contests = getRFBRContestsFromWeb();
+            packet.saveContests();
+        }
+
+        return packet.contests;
+    }
+
+    public static List<Contest> getRFBRContestsFromWeb() {
         try {
             Document doc = Jsoup.connect(LINK).get();
             List<Contest> contests = new ArrayList<Contest>();
@@ -49,8 +65,10 @@ public class PageLoader {
                 Contest contest = new Contest();
                 contest.link = child.attr("href");
                 contest.name = ((TextNode) child.childNode(0)).getWholeText();
+                getContestInfo(contest);
                 contests.add(contest);
             }
+
             return contests;
         } catch (Exception e) {
             logger.error("Error getting RFBR contest list", e);
@@ -73,6 +91,7 @@ public class PageLoader {
             }
 
             contest.article = articleText.toString();
+            contest.saveContestInfo();
         } catch (Exception e) {
             logger.error("Error getting RFBR contest " + contest.name, e);
         }

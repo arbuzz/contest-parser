@@ -1,7 +1,11 @@
 package model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import util.PageLoader;
 import util.Util;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -16,6 +20,8 @@ import java.util.Random;
  * @author Krivinchenko Oxana
  */
 public class Contest {
+
+    public static Logger logger = LoggerFactory.getLogger(Contest.class);
 
     private static final int MAX_DIST = 3;
 
@@ -53,6 +59,57 @@ public class Contest {
             }
             if (word.length() > 3) {
                 count++;
+            }
+        }
+    }
+
+    public String getInfoFileName() {
+        if (link != null) {
+            return PageLoader.CONTESTS_FOLDER + Util.md5(link);
+        }
+        return null;
+    }
+
+    public boolean getArticleFromFile() {
+        try {
+            StringBuffer fileData = new StringBuffer();
+            BufferedReader reader = new BufferedReader(
+                    new FileReader(getInfoFileName()));
+            char[] buf = new char[1024];
+            int numRead = 0;
+            while ((numRead = reader.read(buf)) != -1) {
+                String readData = String.valueOf(buf, 0, numRead);
+                fileData.append(readData);
+            }
+            reader.close();
+            this.article = fileData.toString();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void saveContestInfo() {
+        if (link == null) {
+            return;
+        }
+        File dir = new File(PageLoader.CONTESTS_FOLDER);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        File file = new File(getInfoFileName());
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    file.createNewFile();
+                    FileWriter writer = new FileWriter(file);
+                    writer.write(article);
+                    writer.close();
+                } else {
+                    logger.error("Can't create file " + file.getName());
+                }
+            } catch (Exception e) {
+                logger.error("Error while writing contest info to file");
             }
         }
     }

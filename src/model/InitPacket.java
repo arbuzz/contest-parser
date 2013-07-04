@@ -8,6 +8,10 @@ import util.PageLoader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,6 +30,8 @@ public class InitPacket {
     public String lastUpdate;
 
     public int updateFreq;
+
+    private static DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
 
     private static InitPacket instance;
 
@@ -52,17 +58,29 @@ public class InitPacket {
             }
             if (instance == null) {
                 instance = new InitPacket();
+            } else {
+                try {
+                    Date date = format.parse(instance.lastUpdate);
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.DATE, -instance.updateFreq);
+                    if (cal.getTime().after(date)) {
+                        reload();
+                    }
+                } catch (Exception e) {
+                    reload();
+                }
             }
         }
         return instance;
     }
 
     private static void reload() {
+        logger.info("Reloading!");
         if (instance == null) {
             instance = new InitPacket();
         }
         instance.contests = PageLoader.getRFBRContestsFromWeb();
-        instance.saveContests();
+        instance.save();
         if (instance.contests != null) {
             for (Contest contest : instance.contests) {
                 PageLoader.getContestInfo(contest);
@@ -70,13 +88,14 @@ public class InitPacket {
         }
     }
 
-    public void saveContests() {
+    public void save() {
         File file = new File(LIST_FILE_NAME);
 
         Gson gson = new Gson();
+        this.lastUpdate = format.format(new Date());
         try {
             FileWriter writer = new FileWriter(file);
-            gson.toJson(contests, writer);
+            gson.toJson(this, writer);
             writer.close();
         } catch (Exception e) {
             logger.error("Error writing to file contests", e);

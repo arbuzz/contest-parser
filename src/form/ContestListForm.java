@@ -2,14 +2,15 @@ package form;
 
 import model.Contest;
 import util.HttpClientHolder;
+import util.MultilineCellRenderer;
 import util.PageLoader;
 import util.Util;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
+import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,11 +20,10 @@ import java.util.List;
  * @author Krivinchenko Oxana
  */
 public class ContestListForm {
-    private JList list1;
     private JPanel panel1;
     private JButton settingsButton;
+    private JTable table1;
 
-    private DefaultListModel model;
     private List<Contest> contests;
 
     public ContestListForm() {
@@ -34,7 +34,7 @@ public class ContestListForm {
                 settings.setContentPane(form.getPanel1());
                 settings.pack();
                 settings.setVisible(true);
-                settings.setSize(400, 100);
+                settings.setSize(400, 150);
             }
         });
     }
@@ -56,17 +56,19 @@ public class ContestListForm {
         Collections.sort(contests, new Contest.RateComparator());
         refreshModel();
 
-        list1.addMouseListener(new ContestListMouseAdapter());
+        table1.setModel(new ContestTableModel(contests));
+        table1.addMouseListener(new ContestListMouseAdapter());
     }
 
     public void refreshModel() {
-        model = new DefaultListModel();
-        for (Contest contest : contests) {
-            if (contest.getCompliance() > PageLoader.getComplianceLowerBorder())
-                model.addElement(contest);
+        List<Contest> contests = new ArrayList<Contest>();
+
+        for (Contest contest : this.contests) {
+            if (contest.getCompliance() >= PageLoader.getComplianceLowerBorder())
+                contests.add(contest);
         }
 
-        list1.setModel(model);
+        table1.setModel(new ContestTableModel(contests));
     }
 
     public JPanel getPanel1() {
@@ -77,8 +79,9 @@ public class ContestListForm {
         @Override
         public void mouseClicked(MouseEvent mouseEvent) {
             if (mouseEvent.getClickCount() == 2) {
-                int index = list1.locationToIndex(mouseEvent.getPoint());
-                Contest contest = (Contest) list1.getModel().getElementAt(index);
+                int row = table1.getSelectedRow();
+
+                Contest contest = (Contest) table1.getModel().getValueAt(row, 0);
 
                 JFrame frame = new JFrame("Конкурс");
                 ContestInfoForm form = new ContestInfoForm(contest);
@@ -86,6 +89,74 @@ public class ContestListForm {
                 frame.pack();
                 frame.setVisible(true);
             }
+        }
+    }
+
+    public class ContestTableModel implements TableModel {
+
+        private List<Contest> items;
+
+        public ContestTableModel(List<Contest> items) {
+            this.items = items;
+        }
+
+        @Override
+        public int getRowCount() {
+            return items.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 3;
+        }
+
+        @Override
+        public String getColumnName(int i) {
+            if (i == 0)
+                return "Название";
+            else if (i == 1)
+                return "Коэффициент";
+            else
+                return "Проводится до";
+        }
+
+        @Override
+        public Class<?> getColumnClass(int i) {
+            if (i == 0)
+                return Contest.class;
+            return String.class;
+        }
+
+        @Override
+        public boolean isCellEditable(int i, int i1) {
+            return false;
+        }
+
+        @Override
+        public Object getValueAt(int row, int col) {
+            Contest contest = items.get(row);
+            if (col == 0) {
+                return contest;
+            } if (col == 1) {
+                return Double.toString(contest.getCompliance());
+            } else {
+                return contest.date;
+            }
+        }
+
+        @Override
+        public void setValueAt(Object o, int i, int i1) {
+
+        }
+
+        @Override
+        public void addTableModelListener(TableModelListener tableModelListener) {
+
+        }
+
+        @Override
+        public void removeTableModelListener(TableModelListener tableModelListener) {
+
         }
     }
 }

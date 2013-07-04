@@ -31,6 +31,7 @@ public class PageLoader {
     private static final String LINK_PREFIX = "http://www.rfbr.ru";
 
     private static final String LIST_ELEMENT_CLASS = "l-3 lfc d-block";
+    private static final String LIST_DATE_CLASS = "l-3 pfc d-block";
     private static final String ARTICLE_CLASS = "article";
 
     public static final String CONTESTS_FOLDER = "contests/";
@@ -41,7 +42,7 @@ public class PageLoader {
         InitPacket packet = InitPacket.getInstance();
         if (packet.contests == null || packet.contests.size() == 0) {
             packet.contests = getRFBRContestsFromWeb();
-            packet.saveContests();
+            packet.save();
         }
 
         return packet.contests;
@@ -67,6 +68,15 @@ public class PageLoader {
                 contest.name = ((TextNode) child.childNode(0)).getWholeText();
                 getContestInfo(contest);
                 contests.add(contest);
+            }
+
+            Elements dates = doc.getElementsByAttributeValue("class", LIST_DATE_CLASS);
+            int i = 6;
+            for (Contest contest : contests) {
+                Element dateEl = dates.get(i);
+
+                contest.date = ((TextNode) dateEl.childNode(0)).getWholeText();
+                i += 4;
             }
 
             return contests;

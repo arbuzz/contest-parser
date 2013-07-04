@@ -1,6 +1,7 @@
 package form;
 
 import model.Contest;
+import model.InitPacket;
 import util.HttpClientHolder;
 import util.MultilineCellRenderer;
 import util.PageLoader;
@@ -9,6 +10,7 @@ import util.Util;
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +41,11 @@ public class ContestListForm {
         });
     }
 
-    public void loadContests() {
+    public void loadContests(JLabel label) {
+        label.setText("1");
         contests = PageLoader.getRFBRContests();
+//        contests = InitPacket.getInstance().contests;
+        label.setText("2");
 
         String[] query = null;
         try {
@@ -48,16 +53,23 @@ public class ContestListForm {
         } catch (Exception e) {
             return;
         }
+        label.setText("3");
         for (Contest contest : contests) {
-            contest = PageLoader.getContestInfo(contest);
+            if (contest.article == null) {
+                contest = PageLoader.getContestInfo(contest);
+            }
             contest.calculateRate(query);
         }
+        label.setText("4");
 
         Collections.sort(contests, new Contest.RateComparator());
+        label.setText("5");
         refreshModel();
+        label.setText("6");
 
         table1.setModel(new ContestTableModel(contests));
         table1.addMouseListener(new ContestListMouseAdapter());
+        label.setText("7");
     }
 
     public void refreshModel() {
@@ -137,7 +149,8 @@ public class ContestListForm {
             Contest contest = items.get(row);
             if (col == 0) {
                 return contest;
-            } if (col == 1) {
+            }
+            if (col == 1) {
                 return Double.toString(contest.getCompliance());
             } else {
                 return contest.date;

@@ -11,8 +11,13 @@ import javax.swing.*;
  */
 public class LoadingForm {
     private JPanel panel1;
+    private JLabel label1;
 
     public JPanel getPanel1() {
         return panel1;
+    }
+
+    public JLabel getLabel1() {
+        return label1;
     }
 }

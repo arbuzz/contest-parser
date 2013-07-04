@@ -37,8 +37,6 @@ public class Contest {
 
     public String date;
 
-    public int rand = new Random().nextInt(15);
-
     @Override
     public String toString() {
         return name + "(" + getCompliance() + ")";
@@ -119,7 +117,7 @@ public class Contest {
     }
 
     public double getCompliance() {
-        return new BigDecimal(rate).divide(new BigDecimal(count), 2, RoundingMode.UP).multiply(new BigDecimal(rand)).doubleValue();
+        return new BigDecimal(rate).divide(new BigDecimal(count), 2, RoundingMode.UP).doubleValue();
     }
 
     public static class RateComparator implements Comparator<Contest> {

@@ -12,6 +12,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ public class PageLoader {
     private static double complianceLowerBorder = 0;
 
     public static List<Contest> getRFBRContests() {
+        return getRFBRContests(null);
+    }
+
+    public static List<Contest> getRFBRContests(JLabel label) {
         InitPacket packet = InitPacket.getInstance();
         if (packet.contests == null || packet.contests.size() == 0) {
             packet.contests = getRFBRContestsFromWeb();

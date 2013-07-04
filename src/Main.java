@@ -34,7 +34,13 @@ public class Main {
             loadingFrame.setVisible(true);
             loadingFrame.setSize(400, 100);
 
-            form.loadContests();
+            loading.getLabel1().setText("asdasd");
+
+            try {
+                form.loadContests(loading.getLabel1());
+            } catch (Exception e) {
+                loading.getLabel1().setText("Error");
+            }
 
             loadingFrame.setVisible(false);
 
